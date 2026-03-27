@@ -11,46 +11,46 @@ struct Person {
 
 int main(int argc, char **argv) {
 
-	struct Person *Asher = malloc(sizeof(struct Person));
+	struct Person *name1 = malloc(sizeof(struct Person));
 
-	void **address = (void **) Asher;
+	void **address = (void **) name1;
 
-	printf("%p\n", Asher);
-	printf("%p\n", &(*address));		// The original address of Asher
+	printf("%p\n", name1);
+	printf("%p\n", &(*address));		// The original address of name1
 
-	Asher->name = "Asher";
-	Asher->age = 23;
-	Asher->height = 5.9;
+	name1->name = "name1";
+	name1->age = 23;
+	name1->height = 5.9;
 
-	Asher = reallocarray((void *) Asher, 2, sizeof(struct Person));		// Realloc struct Asher to be equal to the size of 2 Person structs
+	name1 = reallocarray((void *) name1, 2, sizeof(struct Person));		// Realloc struct name1 to be equal to the size of 2 Person structs
 
-	struct Person *Tanjai = (Asher + 1);	// Set Tanjai at the address of the base address of Asher offset by the size of 1 Person struct to be equal to the base address of the newly allocated second Person struct
+	struct Person *name2 = (name1 + 1);	// Set name2 at the address of the base address of name1 offset by the size of 1 Person struct to be equal to the base address of the newly allocated second Person struct
 
-	Tanjai->name = "Tanjai";
-	Tanjai->age = 25;
-	Tanjai->height = 5.4;
+	name2->name = "name2";
+	name2->age = 25;
+	name2->height = 5.4;
 
-	printf("%s\n", Asher->name);
-	printf("%s\n", Tanjai->name);
+	printf("%s\n", name1->name);
+	printf("%s\n", name2->name);
 
-	free(Asher);
+	free(name1);
 
-//	printf("%s\n", Asher->name);	// This causes a segfault
-	printf("%s\n", Tanjai->name);	// This doesn't cause a segfault?
+//	printf("%s\n", name1->name);	// This causes a segfault
+	printf("%s\n", name2->name);	// This doesn't cause a segfault?
 
-	Tanjai = (struct Person *) &(*address);
+	name2 = (struct Person *) &(*address);
 
-//	printf("%s\n", Tanjai->name);	// This causes a segfault (This is Asher's old name variable)
+//	printf("%s\n", name2->name);	// This causes a segfault (This is name1's old name variable)
 
-	printf("%d\n", Tanjai->age);	// Still valid? (This is Asher's old age variable)
+	printf("%d\n", name2->age);	// Still valid? (This is name1's old age variable)
 
-	printf("Next available block of memory on the heap: %016x\n", *((unsigned long long *) Tanjai));	// What?
+	printf("Next available block of memory on the heap: %016x\n", *((unsigned long long *) name2));	// What?
 
-	void *free_ptr = (void *)((unsigned long *) Tanjai);		// Assign the memory address that overwritt "Asher" to free_ptr which is the address of the next available block of memory
+	void *free_ptr = (void *)((unsigned long *) name2);		// Assign the memory address that overwritt "name1" to free_ptr which is the address of the next available block of memory
 
 	printf("%p\n", free_ptr);
 
-	memcpy(free_ptr, (void *) "Asher", 5);;
+	memcpy(free_ptr, (void *) "name1", 5);;
 
 	printf("%s at address %p\n", (char *) free_ptr, free_ptr);
 };
